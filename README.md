@@ -1,3 +1,3 @@
 # learn data science
 
-* AINDA PENSADO NO QUE ESCREVER AQUI E ANALISANDO BEM O QUE AS COISAS PODEM FUNCIONAR QUANDO EU ESTUDAR A ANALISE DE DADOS DENTRO DE CIENCIA DE DADOS 
+* Ainda pensando no que escrever aqui e analisando bem o que as coisas podem funcionar quando eu estudar a analise de dados dentro de ciência de dados  
