@@ -15,6 +15,7 @@ Coleção de consultas T-SQL desenvolvidas e revisadas durante meus estudos. O f
 | [05 — IF e variáveis](05-controle-fluxo-idade.sql) | Controle de fluxo | Comparar um valor calculado com o armazenado |
 | [06 — Fibonacci com WHILE](06-fibonacci-while.sql) | Laços e estado | Gerar uma sequência com variáveis |
 | [07 — Vendas por produto](07-vendas-por-produto.sql) | JOIN e agregação | Calcular vendas por produto sem percorrer produto a produto |
+| [08 — Último registro por data](08-row-number-ultimo-registro.sql) | ROW_NUMBER e datas | Identificar o registro mais recente por entidade com dados fictícios |
 
 ## Padrão de documentação
 
@@ -28,11 +29,11 @@ As consultas incluem comentários com o objetivo, a interpretação da lógica e
 - `SUBSTRING`, `CHARINDEX`, `CASE` e `CONCAT`;
 - `NOT IN` e `NOT EXISTS`;
 - variáveis, `IF`, `WHILE` e `DATEDIFF`;
-- `SUM`, `GROUP BY` e agregações.
+- `SUM`, `GROUP BY`, `ROW_NUMBER()` e análise temporal.
 
 ## Próximas melhorias
 
-- Adicionar conjuntos de dados de teste fictícios;
+- Adicionar mais conjuntos de dados de teste fictícios;
 - documentar resultados esperados para cada exemplo;
 - comparar planos de execução quando houver alternativas;
 - criar projetos analíticos com perguntas de negócio e conclusões.
