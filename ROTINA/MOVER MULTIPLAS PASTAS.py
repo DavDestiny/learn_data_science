@@ -1,7 +1,7 @@
 """
 Script para mover arquivos de ex-funcionários automaticamente.
 
-Cenário (Ativos):
+Cenário (exemplo fictício):
 - Pasta CTPS: já corrigida, é a referência. Arquivos tipo "Ana Beatriz - CTPS.pdf".
 - Pasta RG: tem arquivos de todo mundo, tipo "Ana Beatriz - RG.pdf".
 - Dentro da pasta RG existe a subpasta "ex funcionario", que é o destino.
@@ -146,9 +146,13 @@ def mover_ex_funcionarios(
     simular=False -> move os arquivos de fato
     """
     nomes_ativos = listar_nomes_normalizados(pasta_ativos)
-    os.makedirs(pasta_destino, exist_ok=True)
+
+    # A pasta de destino só é criada na execução real: a simulação não altera nada.
+    if not simular:
+        os.makedirs(pasta_destino, exist_ok=True)
 
     movidos: list[str] = []
+    ignorados: list[str] = []
 
     for arquivo in os.listdir(pasta_origem):
         caminho_origem = os.path.join(pasta_origem, arquivo)
@@ -157,6 +161,16 @@ def mover_ex_funcionarios(
 
         nome_norm = normalizar_nome(arquivo)
         if nome_norm not in nomes_ativos:
+            caminho_destino = os.path.join(pasta_destino, arquivo)
+
+            # Evita perder dados: não sobrescreve um arquivo de mesmo nome que
+            # já esteja na pasta de destino (o comportamento do shutil.move
+            # nesse caso varia conforme o sistema operacional).
+            if os.path.exists(caminho_destino):
+                ignorados.append(arquivo)
+                print(f"[IGNORADO] já existe no destino, não será sobrescrito: {arquivo}")
+                continue
+
             movidos.append(arquivo)
 
             # Verifica se existe um nome muito parecido nos ativos — se sim,
@@ -173,12 +187,13 @@ def mover_ex_funcionarios(
             if simular:
                 print(f"[SIMULAÇÃO] moveria: {arquivo}{aviso}")
             else:
-                caminho_destino = os.path.join(pasta_destino, arquivo)
                 shutil.move(caminho_origem, caminho_destino)
                 print(f"movido: {arquivo}{aviso}")
 
     acao = "seriam movidos" if simular else "foram movidos"
     print(f"\nTotal de arquivos que {acao}: {len(movidos)}")
+    if ignorados:
+        print(f"Arquivos ignorados por já existirem no destino: {len(ignorados)}")
     return movidos
 
 
@@ -211,18 +226,18 @@ def processar_todas_movimentacoes(
 
 if __name__ == "__main__":
     # ---------- AJUSTE AQUI ----------
-    PASTA_ATIVOS = r"K:"  # referência (já corrigida) — usada em todas as movimentações
+    PASTA_ATIVOS = r"C:\caminho\para\CTPS"  # referência (já corrigida) — usada em todas as movimentações
 
     # Adicione aqui uma linha pra cada pasta que precisa organizar.
     # Não precisa mexer em mais nada — só ir acrescentando itens nesta lista.
     MOVIMENTACOES = [
         {
-            "origem": r"K:",
-            "destino": r"K:",
+            "origem": r"C:\caminho\para\RG",
+            "destino": r"C:\caminho\para\RG\ex funcionario",
         },
         {
-            "origem": r"K:",
-            "destino": r"K:",
+            "origem": r"C:\caminho\para\TERMO",
+            "destino": r"C:\caminho\para\TERMO\ex funcionario",
         },
         # {
         #     "origem": r"C:\caminho\para\OUTRA_PASTA",

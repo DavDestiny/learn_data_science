@@ -1,7 +1,20 @@
 /*
 OBJETIVO:
-Praticar funções de texto para localizar separadores, extrair o primeiro nome
-e filtrar descrições que começam com um texto específico.
+Praticar funções de texto para localizar separadores, extrair o primeiro nome,
+filtrar descrições que começam com um texto específico e remover espaços
+desnecessários.
+
+FUNÇÕES PRATICADAS:
+CHARINDEX (posição de um texto), SUBSTRING (trecho), LIKE (padrão de prefixo)
+e TRIM (espaços no início e no fim).
+
+REQUISITO:
+TRIM está disponível a partir do SQL Server 2017. Em versões anteriores, use
+LTRIM(RTRIM(texto)).
+
+RESULTADO ESPERADO DA CONSULTA 1:
+- NOME = 'Ana Souza'  -> POSIÇÃO DO ESPAÇO = 4 e PRIMEIRO NOME = 'Ana'.
+- NOME = 'Madonna'    -> POSIÇÃO DO ESPAÇO = 0 e PRIMEIRO NOME = 'Madonna'.
 */
 
 -- 1. Posição do primeiro espaço e extração do primeiro nome.
@@ -32,4 +45,28 @@ NOTA:
 A comparação de texto pode depender da collation do banco (por exemplo,
 sensibilidade a maiúsculas/minúsculas). Espaços iniciais também alteram
 o resultado do filtro por prefixo.
+*/
+
+-- 3. TRIM: remove espaços do início e do fim do texto.
+-- Exemplo autocontido: não depende de nenhuma tabela.
+DECLARE @DESCRITOR VARCHAR(50) = '   Sabor dos Alpes  ';
+
+SELECT
+    @DESCRITOR                    AS TEXTO_ORIGINAL,
+    DATALENGTH(@DESCRITOR)        AS BYTES_ORIGINAL,   -- 20 (3 + 15 + 2 espaços)
+    TRIM(@DESCRITOR)              AS TEXTO_COM_TRIM,
+    DATALENGTH(TRIM(@DESCRITOR))  AS BYTES_COM_TRIM;   -- 15
+
+-- O espaço inicial impede a correspondência por prefixo sem o TRIM.
+SELECT
+    CASE WHEN @DESCRITOR LIKE 'Sabor dos Alpes%'
+         THEN 'SIM' ELSE 'NÃO' END AS SEM_TRIM,        -- NÃO
+    CASE WHEN TRIM(@DESCRITOR) LIKE 'Sabor dos Alpes%'
+         THEN 'SIM' ELSE 'NÃO' END AS COM_TRIM;        -- SIM
+
+/*
+NOTA SOBRE TRIM EM FILTROS:
+Aplicar TRIM (ou qualquer função) a uma coluna dentro do WHERE pode impedir o
+uso eficiente de índices sobre essa coluna. Quando possível, corrija os
+espaços na origem dos dados.
 */
